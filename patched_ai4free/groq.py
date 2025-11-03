@@ -1,9 +1,9 @@
 import requests
 
-def Reka(prompt, model="reka-core"):
+def Groq(prompt, model="mixtral-8x7b"):
     try:
         response = requests.post(
-            "https://reka.ai/api/chat",
+            "https://groq.com/api/chat",
             json={"prompt": prompt, "model": model}
         )
         return response.json().get("text", "").strip()
