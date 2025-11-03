@@ -12,10 +12,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Load Mistral model locally
-model_id = "mistralai/Mistral-7B-Instruct"
+# Load Phi-2 model (public, lightweight, no token needed)
+model_id = "microsoft/phi-2"
 tokenizer = AutoTokenizer.from_pretrained(model_id)
-model = AutoModelForCausalLM.from_pretrained(model_id, device_map="auto")
+model = AutoModelForCausalLM.from_pretrained(model_id)
 generator = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
 @app.get("/translate")
