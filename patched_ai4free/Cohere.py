@@ -1,28 +1,14 @@
-import json
-import tls_client
+import requests
 
-def Cohere(prompt, model="command-r", temperature=0.7):
-    session = tls_client.Session(client_identifier="chrome_120")
-    session.headers = {
-        "authority": "cohere.com",
-        "accept": "*/*",
-        "content-type": "application/json",
-        "origin": "https://cohere.com",
-        "referer": "https://cohere.com/",
-        "user-agent": "Mozilla/5.0"
-    }
-
-    url = "https://cohere.com/api/v1/chat"
-    payload = {
-        "message": prompt,
-        "chat_history": [],
-        "model": model,
-        "temperature": temperature,
-        "stream": False
-    }
-
+def Cohere(prompt):
     try:
-        response = session.post(url, json=payload)
-        return response.json().get("text", "").strip()
+        response = requests.post(
+            "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent",
+            json={"contents": [{"parts": [{"text": prompt}]}]}
+        )
+        if response.status_code == 200:
+            return response.json()["candidates"][0]["content"]["parts"][0]["text"]
+        else:
+            return f"Gemini error: {response.status_code} {response.text}"
     except Exception as e:
-        return f"Exception: {str(e)}"
+        return f"Gemini exception: {str(e)}"
